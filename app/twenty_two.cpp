@@ -3,7 +3,7 @@
 #include "day01.hpp"
 #include "day02.hpp"
 
-void print_results(const std::string &day, const std::string &part_one, const std::string &part_two) {
+void print_results(std::string_view day, std::string_view part_one, std::string_view part_two) {
     std::cout << "Day " << day << std::endl;
     std::cout << "---------------------------" << std::endl;
     std::cout << "Part One: " << part_one << std::endl;
