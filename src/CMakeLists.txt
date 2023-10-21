@@ -5,6 +5,8 @@
 set(HEADER_LIST
         "${AdventCPP_SOURCE_DIR}/include/day01.hpp"
         "${AdventCPP_SOURCE_DIR}/include/day02.hpp"
+        "${AdventCPP_SOURCE_DIR}/include/day03.hpp"
+        "${AdventCPP_SOURCE_DIR}/include/day04.hpp"
 )
 
 configure_file("../input/day01"
@@ -16,6 +18,8 @@ add_library(solutions_22 STATIC
         input_utils.hpp
         day01.cpp
         day02.cpp
+        day03.cpp
+        day04.cpp
 )
 
 # We need this directory, and users of our library will need it too
