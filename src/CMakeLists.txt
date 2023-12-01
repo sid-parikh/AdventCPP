@@ -8,6 +8,7 @@ set(HEADER_LIST
         "${AdventCPP_SOURCE_DIR}/include/day03.hpp"
         "${AdventCPP_SOURCE_DIR}/include/day04.hpp"
         "${AdventCPP_SOURCE_DIR}/include/day05.hpp"
+        "${AdventCPP_SOURCE_DIR}/include/day15.hpp"
 )
 
 configure_file("../input/day01"
@@ -22,7 +23,9 @@ add_library(solutions_22 STATIC
         day03.cpp
         day04.cpp
         day05.cpp
+        day15.cpp
 )
+add_subdirectory(structures)
 
 # We need this directory, and users of our library will need it too
 target_include_directories(solutions_22 PUBLIC ../include)

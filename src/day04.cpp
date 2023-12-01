@@ -8,7 +8,7 @@
 namespace day04 {
 
     /**
-     * Each elf is assigned a range [start, last]
+     * Each elf is assigned a range [start_, last]
      */
     struct elf_pair {
         std::pair<int, int> elf1;
