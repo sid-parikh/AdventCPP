@@ -2,10 +2,10 @@
 #include <string>
 #include "input_utils.hpp"
 #include <vector>
-#include <sstream>
-#include <iostream>
 #include <algorithm>
 #include <numeric>
+#include <ranges>
+#include <iostream>
 
 namespace day02 {
 
@@ -21,17 +21,17 @@ namespace day02 {
     };
 
     // Debug
-    std::string to_string(const Game& g) {
-        std::ostringstream stream{};
-
-        stream << g.id << ": ";
-
-        for (const Round& s: g.rounds) {
-            stream << '\n' << s.red << ' ' << s.green << ' ' << s.blue;
-        }
-
-        return stream.str();
-    }
+//    std::string to_string(const Game& g) {
+//        std::ostringstream stream{};
+//
+//        stream << g.id << ": ";
+//
+//        for (const Round& s: g.rounds) {
+//            stream << '\n' << s.red << ' ' << s.green << ' ' << s.blue;
+//        }
+//
+//        return stream.str();
+//    }
 
     std::vector<Game> build_games() {
 
@@ -54,9 +54,11 @@ namespace day02 {
                             round.red = stoi(color.substr(1, color.size() - 5));
                             break;
                         case 'e':
+                            // Blue
                             round.blue = stoi(color.substr(1, color.size() - 6));
                             break;
                         case 'n':
+                            // Green
                             round.green = stoi(color.substr(1, color.size() - 7));
                             break;
                     }
@@ -69,46 +71,44 @@ namespace day02 {
         return games;
     }
 
-    bool is_possible(const Game& game, int r, int g, int b) {
+    bool is_possible(const Game& game) {
         return std::ranges::all_of(game.rounds.cbegin(), game.rounds.cend(), [&](const Round& round) {
-            return (round.red <= r && round.blue <= b && round.green <= g);
+            return (round.red <= 12 && round.green <= 13 && round.blue <= 14);
         });
     }
 
     int power(const Game& game) {
 
-        int r = std::ranges::max(game.rounds, {}, [](const Round& r) {
-            return r.red;
-        }).red;
-
-        int b = std::ranges::max(game.rounds, {}, [](const Round& r) {
-            return r.blue;
-        }).blue;
-
-        int g = std::ranges::max(game.rounds, {}, [](const Round& r) {
-            return r.green;
-        }).green;
+        // Get largest red, blue, and green from rounds
+        int r = std::ranges::max(game.rounds | std::views::transform(&Round::red));
+        int b = std::ranges::max(game.rounds | std::views::transform(&Round::blue));
+        int g = std::ranges::max(game.rounds | std::views::transform(&Round::green));
 
         return r * b * g;
     }
 
     std::string part_one() {
         auto games = build_games();
+
         int sum = 0;
-        for (const Game& g: games) {
-            if (is_possible(g, 12, 13, 14)) {
-                sum += g.id;
+        for (const Game& game : games) {
+            if (is_possible(game)) {
+                sum += game.id;
             }
         }
+
         return std::to_string(sum);
     }
 
     std::string part_two() {
+        // Get input
         auto games = build_games();
 
-        int total = std::accumulate(games.begin(), games.end(), 0, [](int sum, const Game& g){
-            return sum + power(g);
-        });
+        // Lazy-transform each game into its calculated "power"
+        // views::common provides backwards-compatibility for reduce/accumulate
+        auto powers = games | std::views::transform(power) | std::views::common;
+        // Sum the powers
+        auto total = std::reduce(powers.begin(), powers.end());
 
         return std::to_string(total);
     }
